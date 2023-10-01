@@ -128,24 +128,31 @@ const getById = async (req,res,next) =>{
     return res.status(200).json({blog});
 }
 
-const deleteBlog = async(req,res,next) => {
+const deleteBlog = async (req, res, next) => {
 
     const id = req.params.id;
-
-    let blog;
+    
     try {
-        blog = await Blog.findByIdAndRemove(id).populate('user');
-        await blog.user.blogs.pull(blog);
-        await blog.user.save();
+        const blog = await Blog.findByIdAndDelete(id).populate('user');
+
+        if (!blog) {
+            return res.status(404).json({ message: "Blog not found" });
+        }
+
+        // Remove the blog from the user's blogs array
+        const user = blog.user;
+        user.blogs.pull(blog);
+        await user.save();
+
+        return res.status(200).json({ message: "Successfully deleted" });
+
     } catch (e) {
-        console.log(e);
+        console.error(e);
+        return res.status(500).json({ message: "Unable to delete" });
+
     }
-    if(!blog)
-    {
-        return res.status(500).json({message : "unable to delete"})
-    }
-    return res.status(200).json({message: "successfuly deleted"})
 }
+
 
 const getByUserId = async (req, res, next) => {
     const userId = req.params.id;
