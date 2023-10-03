@@ -2,10 +2,12 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { authActions } from "../store";
+import { useLoginStaffMutation } from "../store/authslice";
+import { setCredentials } from "../store/authApiSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [login] = useLoginStaffMutation();
   const naviagte = useNavigate();
   const dispath = useDispatch();
   const [inputs, setInputs] = useState({
@@ -29,7 +31,6 @@ const Login = () => {
       })
       .catch((err) => console.log(err));
 
-
     const data = await res.data;
     console.log("return");
     console.log(data);
@@ -42,12 +43,12 @@ const Login = () => {
     if (isSignup) {
       sendRequest("signup")
         .then((data) => localStorage.setItem("userId", data.user._id))
-        .then(() => dispath(authActions.login()))
+        .then(() => dispath(setCredentials({ token: 1234567 })))
         .then(() => naviagte("/blogs"));
     } else {
       sendRequest()
         .then((data) => localStorage.setItem("userId", data.user._id))
-        .then(() => dispath(authActions.login()))
+        .then(() => dispath(setCredentials({ token: 1234567 })))
         .then(() => naviagte("/blogs"));
     }
   };

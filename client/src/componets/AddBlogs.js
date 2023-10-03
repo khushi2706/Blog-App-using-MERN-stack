@@ -1,6 +1,6 @@
 import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -55,7 +55,6 @@ const AddBlogs = () => {
         >
           <Typography
             className={classes.font}
-          
             padding={3}
             color="grey"
             variant="h2"
@@ -100,7 +99,6 @@ const AddBlogs = () => {
           <Button
             sx={{ mt: 2, borderRadius: 4 }}
             variant="contained"
-            
             type="submit"
           >
             Submit
