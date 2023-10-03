@@ -1,6 +1,6 @@
 import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
