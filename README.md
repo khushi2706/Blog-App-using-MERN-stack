@@ -34,8 +34,8 @@ git clone https://github.com/your-username/Blog-App-using-MERN-stack.git
 
 ```bash
 cd Blog-App-using-MERN-stack
-cd backend && npm install
-cd ../frontend && npm install
+cd server && npm install
+cd ../client && npm install
 ```
 
 3. Configure the database connection in the backend. You can use MongoDB Atlas or a local MongoDB server.
@@ -43,13 +43,13 @@ cd ../frontend && npm install
 4. Start the backend server:
 
 ```bash
-cd backend && npm start
+cd server && npm start
 ```
 
 5. Start the frontend application:
 
 ```bash
-cd frontend && npm start
+cd client && npm start
 ```
 
 
