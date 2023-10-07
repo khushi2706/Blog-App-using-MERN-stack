@@ -5,7 +5,7 @@ import {
     AppBar, Typography,Toolbar, Box,  Button, Tabs, Tab,
   } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useState } from "react";
 
 const Header = () => {
@@ -80,6 +80,10 @@ const Header = () => {
               Logout
             </Button>
           )}
+          <div style={{alignContent:'center', padding:'10px 0'}}>
+            <DarkModeIcon />
+          </div>
+
           </Box>
       </Toolbar>
   </AppBar>
