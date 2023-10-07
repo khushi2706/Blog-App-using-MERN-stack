@@ -8,15 +8,10 @@ import UserBlogs from './componets/UserBlogs'
 import AddBlogs from './componets/AddBlogs'
 import BlogDetail from './componets/BlogDetail'
 
-import { ThemeProvider } from 'styled-components';
-import { lightTheme, darkTheme } from './utils/theme';
-import {useDispatch, useSelector} from 'react-redux'
+
 
 function App() {
-  const isDark = useSelector((state) => state.theme.isDarkmode)
-
-  return <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-  <React.Fragment>
+  return <React.Fragment>
     <header>
       <Header/>
     </header>
@@ -31,7 +26,6 @@ function App() {
     </main>
 
   </React.Fragment>;
-  </ThemeProvider>
 }
 
 export default App;

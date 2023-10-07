@@ -8,16 +8,19 @@ import { useDispatch, useSelector } from "react-redux";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { useState } from "react";
+import { lightTheme, darkTheme } from '../utils/theme';
 
 const Header = () => {
     const dispath = useDispatch();
-    const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const isDark = useSelector((state)=> state.theme.isDarkmode)
+    const theme = isDark ? darkTheme : lightTheme
+    
+    const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const [value, setValue] = useState();
 
   return <AppBar 
   position='sticky'
-  sx={{ background:  `${({theme}) => theme.text}` }}>
+  sx={{ background:  `${theme.bg}` }}>
       
       <Toolbar>
           <Typography variant='h4'>
