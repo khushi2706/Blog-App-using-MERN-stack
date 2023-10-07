@@ -14,7 +14,6 @@ import {useDispatch, useSelector} from 'react-redux'
 
 function App() {
   const isDark = useSelector((state) => state.theme.isDarkmode)
-  const dispatch = useDispatch()
 
   return <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
   <React.Fragment>

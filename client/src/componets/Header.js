@@ -1,16 +1,18 @@
 import React from 'react'
 import { Link } from "react-router-dom";
-import { authActions } from "../store";
+import { authActions, setDarkmode } from "../store";
 import {
     AppBar, Typography,Toolbar, Box,  Button, Tabs, Tab,
   } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import { useState } from "react";
 
 const Header = () => {
     const dispath = useDispatch();
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
+    const isDark = useSelector((state)=> state.theme.isDarkmode)
     const [value, setValue] = useState();
 
   return <AppBar 
@@ -80,8 +82,12 @@ const Header = () => {
               Logout
             </Button>
           )}
-          <div style={{alignContent:'center', padding:'10px 0'}}>
-            <DarkModeIcon />
+          <div onClick={(e)=>{
+            e.preventDefault()
+            dispath(setDarkmode(!isDark))}} style={{alignContent:'center', padding:'10px 0', cursor:'pointer'}}>
+            {isDark ? <LightModeIcon />
+            :
+            <DarkModeIcon />}
           </div>
 
           </Box>
