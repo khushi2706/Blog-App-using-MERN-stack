@@ -77,7 +77,7 @@ const AddBlogs = () => {
           <InputLabel className={classes.font} sx={labelStyles}>
             Description
           </InputLabel>
-          {/* <TextareaAutosize
+          <TextareaAutosize
             className={classes.font}
             name="description"
             onChange={handleChange}
@@ -85,7 +85,7 @@ const AddBlogs = () => {
             margin="auto"
             variant="outlined"
             value={inputs.description}
-          /> */}
+          />
           <InputLabel className={classes.font} sx={labelStyles}>
             ImageURL
           </InputLabel>
