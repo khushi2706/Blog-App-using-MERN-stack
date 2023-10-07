@@ -17,8 +17,7 @@ const Header = () => {
 
   return <AppBar 
   position='sticky'
-  sx={{ background: 
-  "linear-gradient(90deg, rgba(9,113,121,1) 3%, rgba(205,110,231,1) 100%)" }}>
+  sx={{ background:  `${({theme}) => theme.text}` }}>
       
       <Toolbar>
           <Typography variant='h4'>

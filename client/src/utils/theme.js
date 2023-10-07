@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-labels */
 export const darkTheme = {
-    bg: '#181818',
+    bg: 'black',
     bgLi : '#202020',
     text : 'white',
     textSof : '#aaaaaa'
