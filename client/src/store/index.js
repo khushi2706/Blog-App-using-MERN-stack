@@ -1,4 +1,4 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { combineReducers, configureStore, createSlice } from "@reduxjs/toolkit";
 
 const authSlice = createSlice({
   name: "auth",
@@ -14,8 +14,27 @@ const authSlice = createSlice({
   },
 });
 
+const themeSlice = createSlice({
+  name : 'theme',
+  initialState : {
+    isDarkmode : false,
+  },
+  reducers : {
+    setDarkmode : (state, action) => {
+      state.isDarkmode = action.payload
+    }
+  }
+
+})
+
 export const authActions = authSlice.actions;
+export const setDarkmode = themeSlice.actions.setDarkmode;
+
+const rootReducer = combineReducers({
+  auth : authSlice.reducer,
+  theme : themeSlice.reducer
+})
 
 export const store = configureStore({
-  reducer: authSlice.reducer,
+  reducer: rootReducer,
 });

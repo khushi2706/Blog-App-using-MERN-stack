@@ -21,6 +21,7 @@
     "react-utils": "^1.0.0",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
+    "styled-components": "^6.0.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
