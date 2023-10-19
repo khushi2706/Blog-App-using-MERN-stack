@@ -55,6 +55,8 @@ const addBlog = async(req,res,next) =>{
 
     const { title , desc , img , user } = req.body;
 
+    const currentDate = new Date();
+
     let existingUser;
     try {
         existingUser = await User.findById(user);
@@ -64,8 +66,10 @@ const addBlog = async(req,res,next) =>{
         if(!existingUser){
         return res.status(400).json({message: " Unautorized"});
     }
+
+
     const blog = new Blog({
-        title ,desc , img , user
+        title ,desc , img , user, date: currentDate
     });
 
     try {

@@ -7,7 +7,7 @@ const Blogs = () => {
   const sendRequest = async () => {
     const res = await axios
       .get("http://localhost:5000/api/blogs")
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err)); 
     const data = await res.data;
     return data;
   };
@@ -26,6 +26,7 @@ const Blogs = () => {
             desc={blog.desc}
             img={blog.img}
             user={blog.user.name}
+            date={new Date(blog.date).toLocaleDateString()}
           />
         ))}
     </div>
