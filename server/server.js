@@ -1,23 +1,33 @@
-const express = require("express");
-const  userRouter  = require("./routes/user-routes");
+const express = require('express');
+const path = require('path');
+const app = express();
+const userRouter = require("./routes/user-routes");
 const blogRouter = require("./routes/blog-routes");
+const bodyParser = require('body-parser');
+
 require("./config/db");
 const cors = require('cors');
 
-const app = express();
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.use(cors());
+// Handle all other routes by returning the React app's HTML file
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
 
-app.set("view engine","ejs");
-app.use(express.json());
+// Parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use("/api/users",userRouter);
-app.use("/api/blogs",blogRouter);
+// Parse application/json
+app.use(bodyParser.json());
 
-app.use("/api",(req,res,next) =>{
-    res.send("hello")
-})
+// Define API routes
+app.use("/api/v1", userRouter);
+app.use("/api/v1", blogRouter);
 
-//define port
-
-app.listen(5000, () => console.log("app started at 5000..."));
+// Define port
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});

@@ -56,14 +56,14 @@ const Header = () => {
               {!isLoggedIn && (
              <> <Button
               LinkComponent={Link}
-              to="login/"
+              to="SingIn/"
               sx={{ margin: 1, fontWeight : 'bold' , color:"white" , borderRadius: 10 }}
               >
-                  Login
+                  SingIn
               </Button>
               <Button 
               LinkComponent={Link}
-              to="login/"
+              to="SingUp/"
                sx={{ margin: 1, fontWeight : 'bold' , color:"white" , borderRadius: 10 }}
               >
                    
@@ -76,7 +76,7 @@ const Header = () => {
             <Button
           onClick={() => dispath(authActions.logout())}
               LinkComponent={Link}
-              to="/login"
+              to="/SingIn"
               variant="contained"
               sx={{ margin: 1, borderRadius: 10 }}
               color="warning"

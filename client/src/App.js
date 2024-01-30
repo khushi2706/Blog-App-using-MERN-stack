@@ -2,7 +2,8 @@ import './App.css';
 import { Route, Routes } from "react-router-dom";
 import Header from './componets/Header';
 import React from 'react';
-import Login from './componets/Login';
+import SingIn from './componets/Auth/SingIn';
+import SingUp from './componets/Auth/SingUp';
 import Blogs from './componets/Blogs';
 import UserBlogs from './componets/UserBlogs'
 import AddBlogs from './componets/AddBlogs'
@@ -17,7 +18,8 @@ function App() {
     </header>
     <main>
     <Routes>
-      <Route path="/login" element={<Login/>}></Route>
+    <Route path="/SingIn" element={<SingIn/>}></Route>
+    <Route path="/SingUp" element={<SingUp/>}></Route>
       <Route path="/blogs" element={<Blogs/>}></Route>
       <Route path="/myBlogs" element={<UserBlogs/>}></Route>
       <Route path="/myBlogs/:id" element={<BlogDetail/>}></Route>
