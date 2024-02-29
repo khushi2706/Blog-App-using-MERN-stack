@@ -1,32 +1,36 @@
-import React from 'react'
+import React, { useReducer } from "react";
 import { Link } from "react-router-dom";
 import { authActions, setDarkmode } from "../store";
 import {
-    AppBar, Typography,Toolbar, Box,  Button, Tabs, Tab,
-  } from "@mui/material";
+  AppBar,
+  Typography,
+  Toolbar,
+  Box,
+  Button,
+  Tabs,
+  Tab,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import { useState } from "react";
-import { lightTheme, darkTheme } from '../utils/theme';
+import { lightTheme, darkTheme } from "../utils/theme";
 
 const Header = () => {
-    const dispath = useDispatch();
-    const isDark = useSelector((state)=> state.theme.isDarkmode)
-    const theme = isDark ? darkTheme : lightTheme
-    
-    const isLoggedIn = useSelector((state) => state.isLoggedIn);
-    const [value, setValue] = useState();
+  const dispath = useDispatch();
+  const isDark = useSelector((state) => state.theme.isDarkmode);
+  const theme = isDark ? darkTheme : lightTheme;
 
-  return <AppBar 
-  position='sticky'
-  sx={{ background:  `${theme.bg}` }}>
-      
+  const isLoggedIn = useReducer((state) => state.isLoggedIn);
+  console.log(isLoggedIn);
+  const [value, setValue] = useState();
+
+  return (
+    <AppBar position="sticky" sx={{ background: `${theme.bg}` }}>
       <Toolbar>
-          <Typography variant='h4'>
-              BlogsApp
-          </Typography>
-         { isLoggedIn && <Box display="flex" marginLeft={"auto"} marginRight="auto">
+        <Typography variant="h4">BlogsApp</Typography>
+        {isLoggedIn && (
+          <Box display="flex" marginLeft={"auto"} marginRight="auto">
             <Tabs
               textColor="inherit"
               value={value}
@@ -51,30 +55,42 @@ const Header = () => {
                 label="Add Blog"
               />
             </Tabs>
-          </Box>}
-          <Box display="flex" marginLeft="auto">
-              {!isLoggedIn && (
-             <> <Button
-              LinkComponent={Link}
-              to="login/"
-              sx={{ margin: 1, fontWeight : 'bold' , color:"white" , borderRadius: 10 }}
+          </Box>
+        )}
+        <Box display="flex" marginLeft="auto">
+          {!isLoggedIn && (
+            <>
+              {" "}
+              <Button
+                LinkComponent={Link}
+                to="login/"
+                sx={{
+                  margin: 1,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderRadius: 10,
+                }}
               >
-                  Login
+                Login
               </Button>
-              <Button 
-              LinkComponent={Link}
-              to="login/"
-               sx={{ margin: 1, fontWeight : 'bold' , color:"white" , borderRadius: 10 }}
+              <Button
+                LinkComponent={Link}
+                to="login/"
+                sx={{
+                  margin: 1,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderRadius: 10,
+                }}
               >
-                   
-                  SignUp
+                SignUp
               </Button>
-              </>
-              )}
+            </>
+          )}
 
-              {isLoggedIn && (
+          {isLoggedIn && (
             <Button
-          onClick={() => dispath(authActions.logout())}
+              onClick={() => dispath(authActions.logout())}
               LinkComponent={Link}
               to="/login"
               variant="contained"
@@ -84,17 +100,23 @@ const Header = () => {
               Logout
             </Button>
           )}
-          <div onClick={(e)=>{
-            e.preventDefault()
-            dispath(setDarkmode(!isDark))}} style={{alignContent:'center', padding:'10px 0', cursor:'pointer'}}>
-            {isDark ? <LightModeIcon />
-            :
-            <DarkModeIcon />}
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              dispath(setDarkmode(!isDark));
+            }}
+            style={{
+              alignContent: "center",
+              padding: "10px 0",
+              cursor: "pointer",
+            }}
+          >
+            {isDark ? <LightModeIcon /> : <DarkModeIcon />}
           </div>
-
-          </Box>
+        </Box>
       </Toolbar>
-  </AppBar>
-}
+    </AppBar>
+  );
+};
 
-export default Header
+export default Header;
