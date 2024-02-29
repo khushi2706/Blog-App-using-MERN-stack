@@ -1,7 +1,7 @@
 import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-
+import TextareaAutosize from "@mui/material/TextareaAutosize";
+import config from "../config";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./utils";
@@ -23,7 +23,7 @@ const AddBlogs = () => {
   };
   const sendRequest = async () => {
     const res = await axios
-      .post("http://localhost:5000/api/blogs/add", {
+      .post(`${config.BASE_URL}/api/blogs/add`, {
         title: inputs.title,
         desc: inputs.description,
         img: inputs.imageURL,
@@ -55,7 +55,6 @@ const AddBlogs = () => {
         >
           <Typography
             className={classes.font}
-          
             padding={3}
             color="grey"
             variant="h2"
@@ -100,7 +99,6 @@ const AddBlogs = () => {
           <Button
             sx={{ mt: 2, borderRadius: 4 }}
             variant="contained"
-            
             type="submit"
           >
             Submit

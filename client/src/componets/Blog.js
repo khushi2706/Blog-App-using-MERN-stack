@@ -14,15 +14,16 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useStyles } from "./utils";
+import config from "../config";
 const Blogs = ({ title, desc, img, user, isUser, id }) => {
- const classes = useStyles();
+  const classes = useStyles();
   const navigate = useNavigate();
   const handleEdit = () => {
     navigate(`/myBlogs/${id}`);
   };
   const deleteRequest = async () => {
     const res = await axios
-      .delete(`http://localhost:5000/api/blogs/${id}`)
+      .delete(`${config.BASE_URL}/api/blogs/${id}`)
       .catch((err) => console.log(err));
     const data = await res.data;
     return data;
@@ -60,7 +61,7 @@ const Blogs = ({ title, desc, img, user, isUser, id }) => {
         <CardHeader
           avatar={
             <Avatar
-               className={classes.font}
+              className={classes.font}
               sx={{ bgcolor: "red" }}
               aria-label="recipe"
             >
@@ -69,12 +70,7 @@ const Blogs = ({ title, desc, img, user, isUser, id }) => {
           }
           title={title}
         />
-        <CardMedia
-          component="img"
-          height="194"
-          image={img}
-          alt="Paella dish"
-        />
+        <CardMedia component="img" height="194" image={img} alt="Paella dish" />
 
         <CardContent>
           <hr />

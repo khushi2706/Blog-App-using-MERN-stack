@@ -4,6 +4,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store";
 import { useNavigate } from "react-router-dom";
+import config from "../config";
 
 const Login = () => {
   const naviagte = useNavigate();
@@ -21,14 +22,15 @@ const Login = () => {
     }));
   };
   const sendRequest = async (type = "login") => {
+    console.log("inside send req");
+    console.log(`${config.BASE_URL}/api/users/${type}`);
     const res = await axios
-      .post(`http://localhost:5000/api/users/${type}`, {
+      .post(`${config.BASE_URL}/api/users/${type}`, {
         name: inputs.name,
         email: inputs.email,
         password: inputs.password,
       })
       .catch((err) => console.log(err));
-
 
     const data = await res.data;
     console.log("return");

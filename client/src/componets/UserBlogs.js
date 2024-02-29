@@ -4,6 +4,7 @@ import axios from "axios";
 import Blogs from "./Blogs";
 import DeleteButton from "./DeleteBlogs";
 import { makeStyles } from "@mui/styles";
+import config from "../config";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -65,7 +66,7 @@ const UserBlogs = () => {
   }, []);
 
   const handleDelete = (blogId) => {
-    axios.delete(`http://localhost:5000/api/blogs/${blogId}`).then(() => {
+    axios.delete(`${config.BASE_URL}/api/blogs/${blogId}`).then(() => {
       sendRequest().then((data) => setUser(data.user));
     });
   };
