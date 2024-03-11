@@ -5,7 +5,6 @@ import config from "../config";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./utils";
-
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 const AddBlogs = () => {
   const classes = useStyles();
