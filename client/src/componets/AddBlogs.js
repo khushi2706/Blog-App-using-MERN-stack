@@ -42,38 +42,38 @@ const AddBlogs = () => {
   };
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} >
         <Box
-          borderRadius={10}
-          boxShadow="10px 10px 20px #ccc"
-          padding={3}
+          borderRadius={5}
+          boxShadow= "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px"
+          padding={5}
           margin={"auto"}
-          marginTop={3}
+          marginTop={5}
+          marginBottom={5}
           display="flex"
           flexDirection={"column"}
-          width={"80%"}
+          width={"60%"}
         >
           <Typography
-            className={classes.font}
             padding={3}
-            color="grey"
-            variant="h2"
+            color="#166534"
+            variant="h3"
             textAlign={"center"}
+            fontWeight="bold"
           >
             Post Your Blog
           </Typography>
-          <InputLabel className={classes.font} sx={labelStyles}>
+          <InputLabel sx={labelStyles}>
             Title
           </InputLabel>
           <TextField
-            className={classes.font}
             name="title"
             onChange={handleChange}
             value={inputs.title}
             margin="auto"
             variant="outlined"
           />
-          <InputLabel className={classes.font} sx={labelStyles}>
+          <InputLabel sx={labelStyles}>
             Description
           </InputLabel>
           <TextareaAutosize
@@ -85,11 +85,10 @@ const AddBlogs = () => {
             variant="outlined"
             value={inputs.description}
           />
-          <InputLabel className={classes.font} sx={labelStyles}>
+          <InputLabel sx={labelStyles}>
             ImageURL
           </InputLabel>
           <TextField
-            className={classes.font}
             name="imageURL"
             onChange={handleChange}
             value={inputs.imageURL}
@@ -97,7 +96,7 @@ const AddBlogs = () => {
             variant="outlined"
           />
           <Button
-            sx={{ mt: 2, borderRadius: 4 }}
+            sx={{ mt: 2, borderRadius: 4,width:100}}
             variant="contained"
             type="submit"
           >
