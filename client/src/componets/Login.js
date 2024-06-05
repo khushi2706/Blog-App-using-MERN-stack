@@ -1,118 +1,160 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { authActions } from "../store";
-import { useNavigate } from "react-router-dom";
-import config from "../config";
+import { userLogin } from "../service/api";
+
+const signupValues = {
+  name: "",
+  email: "",
+  password: "",
+};
+
+const loginValues = {
+  email: "",
+  password: "",
+};
 
 const Login = () => {
-  const naviagte = useNavigate();
-  const dispath = useDispatch();
-  const [inputs, setInputs] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-  const [isSignup, setIsSignup] = useState(false);
-  const handleChange = (e) => {
-    setInputs((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
-  const sendRequest = async (type = "login") => {
-    console.log("inside send req");
-    console.log(`${config.BASE_URL}/api/users/${type}`);
-    const res = await axios
-      .post(`${config.BASE_URL}/api/users/${type}`, {
-        name: inputs.name,
-        email: inputs.email,
-        password: inputs.password,
-      })
-      .catch((err) => console.log(err));
+  const [account, toggleAccount] = useState("login");
+  const [signup, setSignup] = useState(signupValues);
+  const [login, setLogin] = useState(loginValues);
+  const [error, setError] = useState(null);
 
-    const data = await res.data;
-    console.log("return");
-    console.log(data);
-    return data;
+  const handleSignupChange = (evt) => {
+    setSignup({ ...signup, [evt.target.name]: evt.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(inputs);
-    if (isSignup) {
-      sendRequest("signup")
-        .then((data) => localStorage.setItem("userId", data.user._id))
-        .then(() => dispath(authActions.login()))
-        .then(() => naviagte("/blogs"));
-    } else {
-      sendRequest()
-        .then((data) => localStorage.setItem("userId", data.user._id))
-        .then(() => dispath(authActions.login()))
-        .then(() => naviagte("/blogs"));
+  const handleLoginChange = (evt) => {
+    setLogin({ ...login, [evt.target.name]: evt.target.value });
+  };
+
+  const handleLogin = async () => {
+    if (validateLoginFields()) {
+      console.log(login);
+      setLogin(loginValues);
+      const res = await userLogin(login);
+      console.log(res);
     }
   };
+
+  const handleSignup = async () => {
+    if (validateSignupField()) {
+      console.log(signup);
+      setSignup(signupValues);
+    }
+  };
+
+  const handleCreateAccount = () => {
+    setError(null);
+    account === "signup" ? toggleAccount("login") : toggleAccount("signup");
+  };
+
+  const validateLoginFields = () => {
+    if (!login.email || !login.password) {
+      setError("All fields are required");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
+  const validateSignupField = () => {
+    if (!signup.name || !signup.email || !signup.password) {
+      setError("All fields are required");
+      return false;
+    }
+    setError("");
+    return true;
+  };
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <Box
-          maxWidth={400}
-          display="flex"
-          flexDirection={"column"}
-          alignItems="center"
-          justifyContent={"center"}
-          boxShadow="10px 10px 20px #ccc"
-          padding={3}
-          margin="auto"
-          marginTop={5}
-          borderRadius={5}
-        >
+    <Box
+      maxWidth={400}
+      display="flex"
+      flexDirection={"column"}
+      alignItems="center"
+      justifyContent={"center"}
+      boxShadow="10px 10px 20px #ccc"
+      padding={3}
+      margin="auto"
+      marginTop={5}
+      borderRadius={5}
+    >
+      {account === "login" ? (
+        <>
           <Typography variant="h2" padding={3} textAlign="center">
-            {isSignup ? "Signup" : "Login"}
+            {account === "signup" ? "Signup" : "Login"}
           </Typography>
-          {isSignup && (
-            <TextField
-              name="name"
-              onChange={handleChange}
-              value={inputs.name}
-              placeholder="Name"
-              margin="normal"
-            />
-          )}{" "}
           <TextField
             name="email"
-            onChange={handleChange}
-            value={inputs.email}
+            onChange={handleLoginChange}
+            value={login.email}
             type={"email"}
             placeholder="Email"
             margin="normal"
           />
           <TextField
             name="password"
-            onChange={handleChange}
-            value={inputs.password}
+            onChange={handleLoginChange}
+            value={login.password}
             type={"password"}
             placeholder="Password"
             margin="normal"
           />
+          {error && <p>{error}</p>}
+
+          <Button
+            onClick={handleLogin}
+            type="submit"
+            variant="contained"
+            sx={{ borderRadius: 3, marginTop: 3, marginBottom: 3 }}
+            color="warning"
+          >
+            Login
+          </Button>
+
+          <Button onClick={handleCreateAccount}>Create an account</Button>
+        </>
+      ) : (
+        <>
+          <Typography variant="h2" padding={3} textAlign="center">
+            {account ? "Signup" : "Login"}
+          </Typography>
+          <TextField
+            name="name"
+            onChange={handleSignupChange}
+            value={signup.name}
+            placeholder="Name"
+            margin="normal"
+          />
+          <TextField
+            name="email"
+            onChange={handleSignupChange}
+            value={signup.email}
+            type={"email"}
+            placeholder="Email"
+            margin="normal"
+          />
+          <TextField
+            name="password"
+            onChange={handleSignupChange}
+            value={signup.password}
+            type={"password"}
+            placeholder="Password"
+            margin="normal"
+          />
+          {error && <p>{error}</p>}
           <Button
             type="submit"
             variant="contained"
-            sx={{ borderRadius: 3, marginTop: 3 }}
+            sx={{ borderRadius: 3, marginTop: 3, marginBottom: 3 }}
             color="warning"
+            onClick={handleSignup}
           >
-            Submit
+            Sign-in
           </Button>
-          <Button
-            onClick={() => setIsSignup(!isSignup)}
-            sx={{ borderRadius: 3, marginTop: 3 }}
-          >
-            Change To {isSignup ? "Login" : "Signup"}
-          </Button>
-        </Box>
-      </form>
-    </div>
+          <Button onClick={handleCreateAccount}>Already have an account</Button>
+        </>
+      )}
+    </Box>
   );
 };
 
