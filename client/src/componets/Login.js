@@ -1,7 +1,10 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { userLogin } from "../service/api";
-
+import React, { useState, useContext } from "react";
+import { userLogin, userSignup } from "../service/api";
+import { AccountContext } from "../context";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store";
 const signupValues = {
   name: "",
   email: "",
@@ -14,11 +17,15 @@ const loginValues = {
 };
 
 const Login = () => {
+  const { setUser } = useContext(AccountContext);
+  const navigate = useNavigate();
+  const dispath = useDispatch();
   const [account, toggleAccount] = useState("login");
   const [signup, setSignup] = useState(signupValues);
   const [login, setLogin] = useState(loginValues);
   const [error, setError] = useState(null);
-
+  const [signUpError, setSignUpError] = useState(null);
+  const [loginError, setLoginError] = useState(null);
   const handleSignupChange = (evt) => {
     setSignup({ ...signup, [evt.target.name]: evt.target.value });
   };
@@ -32,7 +39,11 @@ const Login = () => {
       console.log(login);
       setLogin(loginValues);
       const res = await userLogin(login);
-      console.log(res);
+      setUser(res.data);
+      setLoginError(res.data.message);
+      localStorage.setItem("user", JSON.stringify(res.data));
+      dispath(authActions.login());
+      navigate("/");
     }
   };
 
@@ -40,6 +51,8 @@ const Login = () => {
     if (validateSignupField()) {
       console.log(signup);
       setSignup(signupValues);
+      const res = await userSignup(signup);
+      setSignUpError(res.data.message);
     }
   };
 
@@ -100,7 +113,7 @@ const Login = () => {
             margin="normal"
           />
           {error && <p>{error}</p>}
-
+          {loginError && <p>{loginError}</p>}
           <Button
             onClick={handleLogin}
             type="submit"
@@ -116,7 +129,7 @@ const Login = () => {
       ) : (
         <>
           <Typography variant="h2" padding={3} textAlign="center">
-            {account ? "Signup" : "Login"}
+            {account ? "Sign-up" : "Login"}
           </Typography>
           <TextField
             name="name"
@@ -142,6 +155,7 @@ const Login = () => {
             margin="normal"
           />
           {error && <p>{error}</p>}
+          {signUpError && <p>{signUpError}</p>}
           <Button
             type="submit"
             variant="contained"
@@ -149,7 +163,7 @@ const Login = () => {
             color="warning"
             onClick={handleSignup}
           >
-            Sign-in
+            Sign-up
           </Button>
           <Button onClick={handleCreateAccount}>Already have an account</Button>
         </>
