@@ -1,9 +1,9 @@
 const express = require("express");
 const userRouter = require("./routes/user-routes");
 const blogRouter = require("./routes/blog-routes");
-require("./config/db");
+const connectToDb = require("./db/index.js");
 const cors = require("cors");
-
+const PORT = 5000;
 const app = express();
 
 app.use(cors());
@@ -20,4 +20,13 @@ app.use("/api", (req, res, next) => {
 
 //define port
 
-app.listen(5001, () => console.log("app started at 5001..."));
+// app.listen(5000, () => console.log("app started at 5000..."));
+
+connectToDb()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server is live on port ${PORT}`));
+  })
+  .catch((error) => {
+    console.error(`MongoDB Atlas Error: ${error}`);
+    process.exit(1);
+  });
