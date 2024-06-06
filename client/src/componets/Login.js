@@ -36,14 +36,16 @@ const Login = () => {
 
   const handleLogin = async () => {
     if (validateLoginFields()) {
-      console.log(login);
       setLogin(loginValues);
       const res = await userLogin(login);
-      setUser(res.data);
-      setLoginError(res.data.message);
-      localStorage.setItem("user", JSON.stringify(res.data));
-      dispath(authActions.login());
-      navigate("/");
+      if (res.status === 200) {
+        setUser(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
+        dispath(authActions.login());
+        navigate("/");
+      } else {
+        setLoginError(res.data.message);
+      }
     }
   };
 
