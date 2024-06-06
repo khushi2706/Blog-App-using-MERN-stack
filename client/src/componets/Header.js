@@ -21,7 +21,7 @@ const Header = () => {
   const theme = isDark ? darkTheme : lightTheme;
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  console.log(isLoggedIn);
+
   const [value, setValue] = useState();
 
   return (
