@@ -39,33 +39,6 @@ const signUp = async (req, res) => {
   }
 };
 
-// const logIn = async (req, res, next) => {
-//   const { email, password } = req.body;
-
-//   let existingUser;
-
-//   try {
-//     existingUser = await User.findOne({ email });
-//   } catch (err) {
-//     console.log(err);
-//   }
-//   if (!existingUser) {
-//     return res.status(404).json({ message: "User is not found" });
-//   }
-
-//   const isPasswordCorrect = bcrypt.compareSync(password, existingUser.password);
-
-//   if (!isPasswordCorrect) {
-//     return res.status(400).json({ message: "Incorrect Password!" });
-//   }
-
-//   return res.status(200).json({ user: existingUser });
-// };
-// const userLogIn = async (req, res) => {
-//   const { email, password } = req.body;
-//   console.log(email, password);
-// };
-
 const logIn = async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
   if (!user) {
