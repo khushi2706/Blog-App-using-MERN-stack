@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { authActions, setDarkmode } from "../store";
 import {
   AppBar,
@@ -24,6 +24,15 @@ const Header = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const [value, setValue] = useState();
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate("/login", { state: { isSignupButtonPressed: false } });
+  };
+
+  const handleSignupClick = () => {
+    navigate("/login", { state: { isSignupButtonPressed: true } });
+  };
 
   return (
     <AppBar position="sticky" sx={{ background: `${theme.bg}` }}>
@@ -62,8 +71,7 @@ const Header = () => {
             <>
               {" "}
               <Button
-                LinkComponent={Link}
-                to="login/"
+                onClick={handleLoginClick}
                 sx={{
                   margin: 1,
                   fontWeight: "bold",
@@ -74,8 +82,7 @@ const Header = () => {
                 Login
               </Button>
               <Button
-                LinkComponent={Link}
-                to="login/"
+                onClick={handleSignupClick}
                 sx={{
                   margin: 1,
                   fontWeight: "bold",

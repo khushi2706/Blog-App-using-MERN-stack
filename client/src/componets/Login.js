@@ -1,26 +1,32 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import config from "../config";
 
 const Login = () => {
+  const location = useLocation();
   const naviagte = useNavigate();
   const dispath = useDispatch();
+  const { isSignupButtonPressed } = location.state || {};
+
   const [inputs, setInputs] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const [isSignup, setIsSignup] = useState(false);
+  const [isSignup, setIsSignup] = useState(isSignupButtonPressed || false);
   const handleChange = (e) => {
     setInputs((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
+  useEffect(() => {
+    setIsSignup(isSignupButtonPressed);
+  }, [isSignupButtonPressed]);
   const sendRequest = async (type = "login") => {
     console.log("inside send req");
     console.log(`${config.BASE_URL}/api/users/${type}`);
