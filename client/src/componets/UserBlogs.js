@@ -55,14 +55,14 @@ const UserBlogs = () => {
 
   const sendRequest = async () => {
     const res = await axios
-      .get(`http://localhost:5000/api/blogs/user/${id}`)
+      .get(`${config.BASE_URL}/api/blogs/user/${id}`)
       .catch((err) => console.log(err));
-    const data = await res.data;
+    const data = await res?.data;
     return data;
   };
 
   useEffect(() => {
-    sendRequest().then((data) => setUser(data.user));
+    sendRequest().then((data) => setUser(data?.user));
   }, []);
 
   const handleDelete = (blogId) => {
