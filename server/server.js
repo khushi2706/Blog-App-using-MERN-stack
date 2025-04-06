@@ -5,8 +5,13 @@ require("./config/db");
 const cors = require("cors");
 
 const app = express();
+const path = require('path')
+
 
 app.use(cors());
+
+// defined  path for serving the upload folder
+app.use('/uploads',express.static(path.join(__dirname,'uploads')));
 
 app.set("view engine", "ejs");
 app.use(express.json());
