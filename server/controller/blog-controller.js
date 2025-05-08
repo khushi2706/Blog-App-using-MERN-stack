@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { findByIdAndRemove } = require("../model/Blog");
 const Blog = require("../model/Blog");
 const User = require("../model/User");
-
+// const path = require('path')
 const getAllBlogs = async(req,res,next) =>{
     let blogs;
     try{
@@ -53,7 +53,11 @@ const getAllBlogs = async(req,res,next) =>{
 
 const addBlog = async(req,res,next) =>{
 
-    const { title , desc , img , user } = req.body;
+    // const { title , desc , img , user } = req.body;
+    const title = req.body.title;
+    const desc = req.body.desc;
+    const imgUrl = req.file.path;
+    const user = req.body.user;
 
     const currentDate = new Date();
 
@@ -69,7 +73,7 @@ const addBlog = async(req,res,next) =>{
 
 
     const blog = new Blog({
-        title ,desc , img , user, date: currentDate
+        title ,desc , imgUrl , user, date: currentDate
     });
 
     try {
