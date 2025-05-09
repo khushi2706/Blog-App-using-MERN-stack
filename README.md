@@ -66,12 +66,10 @@ cd client && npm start
 
 ## Using Docker
 
-1. Prerequisites:
+1. Docker should be set up and installed.
 
-Docker Installed.
-Docker Compose installed (if seperate).
 
-2. Run the following command to start and build the container:
+2. Run the following command from the root of your project:
 
 ```bash
 docker-compose up --build
