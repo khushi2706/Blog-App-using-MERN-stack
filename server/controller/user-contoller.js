@@ -24,7 +24,7 @@ const signUp = async(req,res,next) =>{
 
    try{
     existingUser = await User.findOne({email})
-   }catch(e){
+   }catch(err){
     console.log(err);
    }
 
@@ -52,7 +52,7 @@ const logIn = async(req,res,next) => {
 
     try{
      existingUser = await User.findOne({email})
-    }catch(e){
+    }catch(err){
      console.log(err);
     }
     if(!existingUser){

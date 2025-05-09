@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { authActions, setDarkmode } from "../store";
 import {
@@ -17,14 +17,49 @@ import { useState } from "react";
 import { lightTheme, darkTheme } from "../utils/theme";
 
 const Header = () => {
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const isDark = useSelector((state) => state.theme.isDarkmode);
   const theme = isDark ? darkTheme : lightTheme;
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const [value, setValue] = useState();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedTab = localStorage.getItem("selectedTab");
+    const savedTheme = localStorage.getItem("isDarkMode");
+    if (savedTab !== null) {
+      setValue(parseInt(savedTab, 10));
+    }
+    if (savedTheme !== null) {
+      dispatch(setDarkmode(JSON.parse(savedTheme))); 
+    }
+  }, []);
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.startsWith("/blogs/add")) {
+      setValue(2);
+    } else if (path.startsWith("/myBlogs")) {
+      setValue(1);
+    } else if (path.startsWith("/blogs")) {
+      setValue(0);
+    } else {
+      setValue(0); 
+    }
+  }, [location.pathname]);
+
+  const handleTabChange = (e, newValue) => {
+    setValue(newValue);
+    localStorage.setItem("selectedTab", newValue); 
+  };
+
+  const handleDarkModeToggle = () => {
+    const newTheme = !isDark;
+    localStorage.setItem("isDarkMode", newTheme); 
+    dispatch(setDarkmode(newTheme)); 
+  }
 
   const handleLoginClick = () => {
     navigate("/login", { state: { isSignupButtonPressed: false } });
@@ -43,7 +78,7 @@ const Header = () => {
             <Tabs
               textColor="inherit"
               value={value}
-              onChange={(e, val) => setValue(val)}
+              onChange={handleTabChange}
             >
               <Tab
                 //className={classes.font}
@@ -97,7 +132,7 @@ const Header = () => {
 
           {isLoggedIn && (
             <Button
-              onClick={() => dispath(authActions.logout())}
+              onClick={() => dispatch(authActions.logout())}
               LinkComponent={Link}
               to="/login"
               variant="contained"
@@ -108,10 +143,7 @@ const Header = () => {
             </Button>
           )}
           <div
-            onClick={(e) => {
-              e.preventDefault();
-              dispath(setDarkmode(!isDark));
-            }}
+            onClick={handleDarkModeToggle}
             style={{
               alignContent: "center",
               padding: "10px 0",

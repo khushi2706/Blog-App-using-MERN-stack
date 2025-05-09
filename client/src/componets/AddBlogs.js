@@ -5,6 +5,7 @@ import config from "../config";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./utils";
+import placeholderImg from "../../src/placeholder.jpg"
 
 const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 const AddBlogs = () => {
@@ -26,7 +27,7 @@ const AddBlogs = () => {
       .post(`${config.BASE_URL}/api/blogs/add`, {
         title: inputs.title,
         desc: inputs.description,
-        img: inputs.imageURL,
+        img: inputs.imageURL.trim() === "" ? placeholderImg : inputs.imageURL,
         user: localStorage.getItem("userId"),
       })
       .catch((err) => console.log(err));
