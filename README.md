@@ -75,7 +75,10 @@ cd client && npm start
 docker-compose up --build
 ```
 
-3. Stop the containers:
+3. Access the application in your web browser at [http://localhost:3000](http://localhost:3000).
+
+
+4. Stop the containers:
 
 ```bash
 docker-compose down
