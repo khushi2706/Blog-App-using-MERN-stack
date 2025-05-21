@@ -25,7 +25,8 @@ const signUp = async(req,res,next) =>{
    try{
     existingUser = await User.findOne({email})
    }catch(e){
-    console.log(err);
+    console.log(e);
+    return res.status(500).json({ message: "Error checking existing user" });
    }
 
    if(existingUser){
@@ -39,7 +40,7 @@ const signUp = async(req,res,next) =>{
    });
 
    try{
-       user.save();
+       await user.save();
        return res.status(201).json({ user })
    }
    catch(e){console.log(e);}

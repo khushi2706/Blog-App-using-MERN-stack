@@ -27,6 +27,7 @@ const Login = () => {
   useEffect(() => {
     setIsSignup(isSignupButtonPressed);
   }, [isSignupButtonPressed]);
+  
   const sendRequest = async (type = "login") => {
     console.log("inside send req");
     console.log(`${config.BASE_URL}/api/users/${type}`);
