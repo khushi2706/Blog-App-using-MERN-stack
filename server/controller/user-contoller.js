@@ -18,6 +18,7 @@ const getAllUser = async(req,res,next) =>{
 }
 
 const signUp = async(req,res,next) =>{
+    console.log("Received signup data:", req.body);
    const { name , email , password } = req.body;
 
    let existingUser;
@@ -28,11 +29,12 @@ const signUp = async(req,res,next) =>{
     console.log(e);
     return res.status(500).json({ message: "Error checking existing user" });
    }
-
-   if(existingUser){
+   
+   if(existingUser){ console.log("here");
        return res.status(400).json({message : "User is already exists!"})
    }
    const hashedPassword = bcrypt.hashSync(password);
+   
    const user = new User({
        name,email,
        password: hashedPassword,
@@ -43,7 +45,9 @@ const signUp = async(req,res,next) =>{
        await user.save();
        return res.status(201).json({ user })
    }
-   catch(e){console.log(e);}
+   catch(e){console.log(e);
+    return res.status(500).json({ message: "Signup failed!" });
+   }
 }
 
 const logIn = async(req,res,next) => {

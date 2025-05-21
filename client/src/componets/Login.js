@@ -1,6 +1,7 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import bcrypt from 'bcryptjs';
 import { useDispatch } from "react-redux";
 import { authActions } from "../store";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -27,18 +28,18 @@ const Login = () => {
   useEffect(() => {
     setIsSignup(isSignupButtonPressed);
   }, [isSignupButtonPressed]);
-  
-  const sendRequest = async (type = "login") => {
+
+  const sendRequest = async (type = "login",dataToSend) => {
     console.log("inside send req");
     console.log(`${config.BASE_URL}/api/users/${type}`);
-    const res = await axios
-      .post(`${config.BASE_URL}/api/users/${type}`, {
-        name: inputs.name,
-        email: inputs.email,
-        password: inputs.password,
-      })
-      .catch((err) => console.log(err));
-
+    let res;
+    try {
+      res = await axios.post(`${config.BASE_URL}/api/users/${type}`, dataToSend)
+    } catch (err) {
+      console.error("Signup error:", err);
+      return;
+    }
+    
     const data = await res.data;
     console.log("return");
     console.log(data);
@@ -47,14 +48,20 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(inputs);
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(inputs.password, salt);
+    const dataToSend = {
+    ...inputs,
+    password: hashedPassword,  
+  };
+    console.log(dataToSend);
     if (isSignup) {
-      sendRequest("signup")
+      sendRequest("signup", dataToSend)
         .then((data) => localStorage.setItem("userId", data.user._id))
         .then(() => dispath(authActions.login()))
         .then(() => naviagte("/blogs"));
     } else {
-      sendRequest()
+      sendRequest("login", dataToSend)
         .then((data) => localStorage.setItem("userId", data.user._id))
         .then(() => dispath(authActions.login()))
         .then(() => naviagte("/blogs"));
