@@ -9,9 +9,15 @@ const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 
 const BlogDetail = () => {
   const navigate = useNavigate();
-  // const [blog, setBlog] = useState();
   const id = useParams().id;
-  const [inputs, setInputs] = useState({});
+
+  // Keep setBlog because you use it, but prefix blog with _ to avoid unused warning
+  const [_blog, setBlog] = useState();
+
+  const [inputs, setInputs] = useState({
+    title: "",
+    description: "",
+  });
 
   const handleChange = (e) => {
     setInputs((prevState) => ({
@@ -20,24 +26,24 @@ const BlogDetail = () => {
     }));
   };
 
-  // ✅ useCallback prevents function identity from changing between renders
+  // useCallback to memoize function and avoid unnecessary re-renders
   const fetchDetails = useCallback(async () => {
     try {
       const res = await axios.get(`${config.BASE_URL}/api/blogs/${id}`);
-      const data = await res.data;
+      const data = res.data;
       setBlog(data.blog);
       setInputs({
         title: data.blog.title,
         description: data.blog.description,
       });
     } catch (err) {
-      console.log(err);
+      console.error("Failed to fetch blog details:", err);
     }
   }, [id]);
 
   useEffect(() => {
     fetchDetails();
-  }, [fetchDetails]); // ✅ ESLint happy now
+  }, [fetchDetails]);
 
   const sendRequest = async () => {
     try {
@@ -47,15 +53,20 @@ const BlogDetail = () => {
       });
       return res.data;
     } catch (err) {
-      console.log(err);
+      console.error("Failed to update blog:", err);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     sendRequest()
-      .then((data) => console.log(data))
-      .then(() => navigate("/myBlogs/"));
+      .then((data) => {
+        console.log("Update successful:", data);
+        navigate("/myBlogs/");
+      })
+      .catch((err) => {
+        console.error("Error submitting form:", err);
+      });
   };
 
   return (
@@ -81,8 +92,9 @@ const BlogDetail = () => {
               variant="h2"
               textAlign={"center"}
             >
-              Post Your Blog
+              Edit Your Blog
             </Typography>
+
             <InputLabel sx={labelStyles}>Title</InputLabel>
             <TextField
               name="title"
@@ -90,7 +102,9 @@ const BlogDetail = () => {
               value={inputs.title}
               margin="auto"
               variant="outlined"
+              required
             />
+
             <InputLabel sx={labelStyles}>Description</InputLabel>
             <TextField
               name="description"
@@ -98,7 +112,11 @@ const BlogDetail = () => {
               value={inputs.description}
               margin="auto"
               variant="outlined"
+              multiline
+              minRows={4}
+              required
             />
+
             <Button
               sx={{ mt: 2, borderRadius: 4 }}
               variant="contained"
