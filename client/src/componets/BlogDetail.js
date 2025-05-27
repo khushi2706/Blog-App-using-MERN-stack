@@ -12,7 +12,7 @@ const BlogDetail = () => {
   const id = useParams().id;
 
   // Keep setBlog because you use it, but prefix blog with _ to avoid unused warning
-  const [_blog, setBlog] = useState();
+  const [setBlog] = useState();
 
   const [inputs, setInputs] = useState({
     title: "",
