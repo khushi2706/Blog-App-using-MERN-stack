@@ -9,7 +9,7 @@ const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 
 const BlogDetail = () => {
   const navigate = useNavigate();
-  const [blog, setBlog] = useState();
+  // const [blog, setBlog] = useState();
   const id = useParams().id;
   const [inputs, setInputs] = useState({});
 
