@@ -9,15 +9,10 @@ const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 
 const BlogDetail = () => {
   const navigate = useNavigate();
-  const id = useParams().id;
+  const { id } = useParams();
 
-  // Keep setBlog because you use it, but prefix blog with _ to avoid unused warning
-  const [blog,setBlog] = useState();
-  console.log(blog)
-  const [inputs, setInputs] = useState({
-    title: "",
-    description: "",
-  });
+  const [inputs, setInputs] = useState({ title: "", description: "" });
+  const [blog, setBlog] = useState(null);
 
   const handleChange = (e) => {
     setInputs((prevState) => ({
@@ -26,15 +21,15 @@ const BlogDetail = () => {
     }));
   };
 
-  // useCallback to memoize function and avoid unnecessary re-renders
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchDetails = useCallback(async () => {
     try {
       const res = await axios.get(`${config.BASE_URL}/api/blogs/${id}`);
       const data = res.data;
       setBlog(data.blog);
       setInputs({
-        title: data.blog.title,
-        description: data.blog.description,
+        title: data.blog.title || "",
+        description: data.blog.description || "",
       });
     } catch (err) {
       console.error("Failed to fetch blog details:", err);
@@ -61,17 +56,14 @@ const BlogDetail = () => {
     e.preventDefault();
     sendRequest()
       .then((data) => {
-        console.log("Update successful:", data);
+        console.log("Blog updated:", data);
         navigate("/myBlogs/");
-      })
-      .catch((err) => {
-        console.error("Error submitting form:", err);
       });
   };
 
   return (
     <div>
-      {inputs && (
+      {blog ? (
         <form onSubmit={handleSubmit}>
           <Box
             border={3}
@@ -92,9 +84,8 @@ const BlogDetail = () => {
               variant="h2"
               textAlign={"center"}
             >
-              Edit Your Blog
+              Update Blog
             </Typography>
-
             <InputLabel sx={labelStyles}>Title</InputLabel>
             <TextField
               name="title"
@@ -104,7 +95,6 @@ const BlogDetail = () => {
               variant="outlined"
               required
             />
-
             <InputLabel sx={labelStyles}>Description</InputLabel>
             <TextField
               name="description"
@@ -113,10 +103,9 @@ const BlogDetail = () => {
               margin="auto"
               variant="outlined"
               multiline
-              minRows={4}
+              rows={4}
               required
             />
-
             <Button
               sx={{ mt: 2, borderRadius: 4 }}
               variant="contained"
@@ -127,6 +116,10 @@ const BlogDetail = () => {
             </Button>
           </Box>
         </form>
+      ) : (
+        <Typography textAlign="center" mt={5} variant="h5">
+          Loading blog details...
+        </Typography>
       )}
     </div>
   );
