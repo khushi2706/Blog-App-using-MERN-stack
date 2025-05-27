@@ -1,7 +1,7 @@
 import { Button, InputLabel, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import config from "../config";
 
@@ -11,45 +11,48 @@ const BlogDetail = () => {
   const navigate = useNavigate();
   const [blog, setBlog] = useState();
   const id = useParams().id;
-  console.log(id);
   const [inputs, setInputs] = useState({});
+
   const handleChange = (e) => {
     setInputs((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
-  const fetchDetails = async () => {
-    const res = await axios
-      .get(`${config.BASE_URL}/api/blogs/${id}`)
-      .catch((err) => console.log(err));
-    const data = await res.data;
-    return data;
-  };
-  useEffect(() => {
-    fetchDetails().then((data) => {
+
+  // ✅ useCallback prevents function identity from changing between renders
+  const fetchDetails = useCallback(async () => {
+    try {
+      const res = await axios.get(`${config.BASE_URL}/api/blogs/${id}`);
+      const data = await res.data;
       setBlog(data.blog);
       setInputs({
         title: data.blog.title,
         description: data.blog.description,
       });
-    });
+    } catch (err) {
+      console.log(err);
+    }
   }, [id]);
+
+  useEffect(() => {
+    fetchDetails();
+  }, [fetchDetails]); // ✅ ESLint happy now
+
   const sendRequest = async () => {
-    const res = await axios
-      .put(`${config.BASE_URL}/api/blogs/update/${id}`, {
+    try {
+      const res = await axios.put(`${config.BASE_URL}/api/blogs/update/${id}`, {
         title: inputs.title,
         description: inputs.description,
-      })
-      .catch((err) => console.log(err));
-
-    const data = await res.data;
-    return data;
+      });
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
   };
-  console.log(blog);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(inputs);
     sendRequest()
       .then((data) => console.log(data))
       .then(() => navigate("/myBlogs/"));
@@ -96,7 +99,6 @@ const BlogDetail = () => {
               margin="auto"
               variant="outlined"
             />
-
             <Button
               sx={{ mt: 2, borderRadius: 4 }}
               variant="contained"
