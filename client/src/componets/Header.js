@@ -1,5 +1,5 @@
-import React, { useReducer, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { authActions, setDarkmode } from "../store";
 import {
   AppBar,
@@ -13,7 +13,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
-import { useState } from "react";
 import { lightTheme, darkTheme } from "../utils/theme";
 
 const Header = () => {
@@ -80,31 +79,15 @@ const Header = () => {
               value={value}
               onChange={handleTabChange}
             >
-              <Tab
-                //className={classes.font}
-                LinkComponent={Link}
-                to="/blogs"
-                label="All Blogs"
-              />
-              <Tab
-                //className={classes.font}
-                LinkComponent={Link}
-                to="/myBlogs"
-                label="My Blogs"
-              />
-              <Tab
-                //className={classes.font}
-                LinkComponent={Link}
-                to="/blogs/add"
-                label="Add Blog"
-              />
+              <Tab LinkComponent={Link} to="/blogs" label="All Blogs" />
+              <Tab LinkComponent={Link} to="/myBlogs" label="My Blogs" />
+              <Tab LinkComponent={Link} to="/blogs/add" label="Add Blog" />
             </Tabs>
           </Box>
         )}
         <Box display="flex" marginLeft="auto">
           {!isLoggedIn && (
             <>
-              {" "}
               <Button
                 onClick={handleLoginClick}
                 sx={{
@@ -143,7 +126,10 @@ const Header = () => {
             </Button>
           )}
           <div
-            onClick={handleDarkModeToggle}
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(setDarkmode(!isDark));
+            }}
             style={{
               alignContent: "center",
               padding: "10px 0",
