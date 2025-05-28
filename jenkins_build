@@ -1,0 +1,88 @@
+@echo off
+SETLOCAL
+
+echo ===============================
+echo Step 1: Install NPM dependencies and fix vulnerabilities
+echo ===============================
+
+:: CLIENT SIDE
+cd %WORKSPACE%\client
+echo Installing client dependencies...
+call npm install
+IF %ERRORLEVEL% NEQ 0 (
+    echo  Failed to install client dependencies
+    EXIT /B 1
+)
+
+echo Running npm audit fix on client...
+call npm audit fix --force
+IF %ERRORLEVEL% NEQ 0 (
+    echo  npm audit fix on client failed — continuing anyway...
+)
+
+:: SERVER SIDE
+cd %WORKSPACE%\server
+echo Installing server dependencies...
+call npm install
+IF %ERRORLEVEL% NEQ 0 (
+    echo  Failed to install server dependencies
+    EXIT /B 1
+)
+
+echo Running npm audit fix on server...
+call npm audit fix --force
+IF %ERRORLEVEL% NEQ 0 (
+    echo  npm audit fix on server failed — continuing anyway...
+)
+
+echo ===============================
+echo Step 2: Build React app
+echo ===============================
+
+cd %WORKSPACE%\client
+SET NODE_OPTIONS=--openssl-legacy-provider
+echo Building React app...
+call npm run build
+IF %ERRORLEVEL% NEQ 0 (
+    echo  React build failed
+    EXIT /B 1
+)
+
+echo ===============================
+echo Step 3: Deploy to IIS
+echo ===============================
+
+:: Define IIS deployment paths
+SET FRONTEND_DEPLOY_PATH=C:\inetpub\wwwroot\BlogApp\Client
+SET BACKEND_DEPLOY_PATH=C:\inetpub\wwwroot\BlogApp\Server
+
+echo Cleaning old deployments...
+rmdir /S /Q "%FRONTEND_DEPLOY_PATH%"
+rmdir /S /Q "%BACKEND_DEPLOY_PATH%"
+
+echo Creating target directories...
+mkdir "%FRONTEND_DEPLOY_PATH%"
+mkdir "%BACKEND_DEPLOY_PATH%"
+
+echo Copying new frontend build...
+robocopy "%WORKSPACE%\client\build" "%FRONTEND_DEPLOY_PATH%" /MIR /Z /W:5 /R:3
+
+echo Copying backend code...
+xcopy /E /I /Y "%WORKSPACE%\server\*" "%BACKEND_DEPLOY_PATH%\"
+
+echo Restarting IIS...
+iisreset
+
+echo ===============================
+echo Step 4: Start Node.js Backend
+echo ===============================
+
+:: Start server.js in a new Command Prompt window
+start "" cmd /k "cd /d %BACKEND_DEPLOY_PATH% && node server.js"
+
+echo ===============================
+echo  Deployment & Server Startup Complete!
+echo ===============================
+
+ENDLOCAL
+EXIT /B 0
