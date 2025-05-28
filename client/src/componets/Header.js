@@ -36,7 +36,7 @@ const Header = () => {
   return (
     <AppBar position="sticky" sx={{ background: `${theme.bg}` }}>
       <Toolbar>
-        <Typography variant="h4">BlogsApp</Typography>
+        <Typography variant="h4">BlogApp</Typography>
         {isLoggedIn && (
           <Box display="flex" marginLeft={"auto"} marginRight="auto">
             <Tabs
