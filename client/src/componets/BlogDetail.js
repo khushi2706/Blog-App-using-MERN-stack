@@ -1,7 +1,7 @@
 import { Button, InputLabel, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import config from "../config";
 
@@ -9,55 +9,61 @@ const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
 
 const BlogDetail = () => {
   const navigate = useNavigate();
-  const [blog, setBlog] = useState();
-  const id = useParams().id;
-  console.log(id);
-  const [inputs, setInputs] = useState({});
+  const { id } = useParams();
+
+  const [inputs, setInputs] = useState({ title: "", description: "" });
+  const [blog, setBlog] = useState(null);
+
   const handleChange = (e) => {
     setInputs((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
-  const fetchDetails = async () => {
-    const res = await axios
-      .get(`${config.BASE_URL}/api/blogs/${id}`)
-      .catch((err) => console.log(err));
-    const data = await res.data;
-    return data;
-  };
-  useEffect(() => {
-    fetchDetails().then((data) => {
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchDetails = useCallback(async () => {
+    try {
+      const res = await axios.get(`${config.BASE_URL}/api/blogs/${id}`);
+      const data = res.data;
       setBlog(data.blog);
       setInputs({
-        title: data.blog.title,
-        description: data.blog.description,
+        title: data.blog.title || "",
+        description: data.blog.description || "",
       });
-    });
+    } catch (err) {
+      console.error("Failed to fetch blog details:", err);
+    }
   }, [id]);
+
+  useEffect(() => {
+    fetchDetails();
+  }, [fetchDetails]);
+
   const sendRequest = async () => {
-    const res = await axios
-      .put(`${config.BASE_URL}/api/blogs/update/${id}`, {
+    try {
+      const res = await axios.put(`${config.BASE_URL}/api/blogs/update/${id}`, {
         title: inputs.title,
         description: inputs.description,
-      })
-      .catch((err) => console.log(err));
-
-    const data = await res.data;
-    return data;
+      });
+      return res.data;
+    } catch (err) {
+      console.error("Failed to update blog:", err);
+    }
   };
-  console.log(blog);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(inputs);
     sendRequest()
-      .then((data) => console.log(data))
-      .then(() => navigate("/myBlogs/"));
+      .then((data) => {
+        console.log("Blog updated:", data);
+        navigate("/myBlogs/");
+      });
   };
 
   return (
     <div>
-      {inputs && (
+      {blog ? (
         <form onSubmit={handleSubmit}>
           <Box
             border={3}
@@ -78,7 +84,7 @@ const BlogDetail = () => {
               variant="h2"
               textAlign={"center"}
             >
-              Post Your Blog
+              Update Blog
             </Typography>
             <InputLabel sx={labelStyles}>Title</InputLabel>
             <TextField
@@ -87,6 +93,7 @@ const BlogDetail = () => {
               value={inputs.title}
               margin="auto"
               variant="outlined"
+              required
             />
             <InputLabel sx={labelStyles}>Description</InputLabel>
             <TextField
@@ -95,8 +102,10 @@ const BlogDetail = () => {
               value={inputs.description}
               margin="auto"
               variant="outlined"
+              multiline
+              rows={4}
+              required
             />
-
             <Button
               sx={{ mt: 2, borderRadius: 4 }}
               variant="contained"
@@ -107,6 +116,10 @@ const BlogDetail = () => {
             </Button>
           </Box>
         </form>
+      ) : (
+        <Typography textAlign="center" mt={5} variant="h5">
+          Loading blog details...
+        </Typography>
       )}
     </div>
   );
