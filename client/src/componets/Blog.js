@@ -70,7 +70,7 @@ const Blogs = ({ title, desc, img, user, isUser, id }) => {
           }
           title={title}
         />
-        <CardMedia component="img" height="194" image={img} alt="Paella dish" />
+        <CardMedia component="img" height="400" image={img} alt="Paella dish" />
 
         <CardContent>
           <hr />
