@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect,useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { authActions, setDarkmode } from "../store";
 import {
   AppBar,
@@ -126,10 +126,7 @@ const Header = () => {
             </Button>
           )}
           <div
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(setDarkmode(!isDark));
-            }}
+            onClick={handleDarkModeToggle}
             style={{
               alignContent: "center",
               padding: "10px 0",
