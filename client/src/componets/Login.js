@@ -30,8 +30,7 @@ const Login = () => {
   }, [isSignupButtonPressed]);
 
   const sendRequest = async (type = "login",dataToSend) => {
-    console.log("inside send req");
-    console.log(`${config.BASE_URL}/api/users/${type}`);
+  
     let res;
     try {
       res = await axios.post(`${config.BASE_URL}/api/users/${type}`, dataToSend)
@@ -41,8 +40,6 @@ const Login = () => {
     }
     
     const data = await res.data;
-    console.log("return");
-    console.log(data);
     return data;
   };
 
@@ -54,7 +51,6 @@ const Login = () => {
     ...inputs,
     password: hashedPassword,  
   };
-    console.log(dataToSend);
     if (isSignup) {
       sendRequest("signup", dataToSend)
         .then((data) => localStorage.setItem("userId", data.user._id))
