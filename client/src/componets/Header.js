@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect,useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { authActions, setDarkmode } from "../store";
 import {
   AppBar,
@@ -23,7 +23,42 @@ const Header = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const [value, setValue] = useState();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedTab = localStorage.getItem("selectedTab");
+    const savedTheme = localStorage.getItem("isDarkMode");
+    if (savedTab !== null) {
+      setValue(parseInt(savedTab, 10));
+    }
+    if (savedTheme !== null) {
+      dispatch(setDarkmode(JSON.parse(savedTheme))); 
+    }
+  }, []);
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.startsWith("/blogs/add")) {
+      setValue(2);
+    } else if (path.startsWith("/myBlogs")) {
+      setValue(1);
+    } else if (path.startsWith("/blogs")) {
+      setValue(0);
+    } else {
+      setValue(0); 
+    }
+  }, [location.pathname]);
+
+  const handleTabChange = (e, newValue) => {
+    setValue(newValue);
+    localStorage.setItem("selectedTab", newValue); 
+  };
+
+  const handleDarkModeToggle = () => {
+    const newTheme = !isDark;
+    localStorage.setItem("isDarkMode", newTheme); 
+    dispatch(setDarkmode(newTheme)); 
+  }
 
   const handleLoginClick = () => {
     navigate("/login", { state: { isSignupButtonPressed: false } });
@@ -42,7 +77,7 @@ const Header = () => {
             <Tabs
               textColor="inherit"
               value={value}
-              onChange={(e, val) => setValue(val)}
+              onChange={handleTabChange}
             >
               <Tab LinkComponent={Link} to="/blogs" label="All Blogs" />
               <Tab LinkComponent={Link} to="/myBlogs" label="My Blogs" />
@@ -91,10 +126,7 @@ const Header = () => {
             </Button>
           )}
           <div
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(setDarkmode(!isDark));
-            }}
+            onClick={handleDarkModeToggle}
             style={{
               alignContent: "center",
               padding: "10px 0",
