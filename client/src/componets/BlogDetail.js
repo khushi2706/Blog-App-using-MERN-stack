@@ -5,7 +5,13 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import config from "../config";
 
-const labelStyles = { mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" };
+const labelStyles = {
+  mb: 1,
+  mt: 2,
+  fontSize: "18px",
+  fontWeight: "bold",
+  color: "var(--text)",
+};
 
 const BlogDetail = () => {
   const navigate = useNavigate();
@@ -26,10 +32,11 @@ const BlogDetail = () => {
     try {
       const res = await axios.get(`${config.BASE_URL}/api/blogs/${id}`);
       const data = res.data;
-      setBlog(data.blog);
+      const fetchedBlog = data?.data?.blog;
+      setBlog(fetchedBlog);
       setInputs({
-        title: data.blog.title || "",
-        description: data.blog.description || "",
+        title: fetchedBlog?.title || "",
+        description: fetchedBlog?.desc || "",
       });
     } catch (err) {
       console.error("Failed to fetch blog details:", err);
@@ -44,7 +51,7 @@ const BlogDetail = () => {
     try {
       const res = await axios.put(`${config.BASE_URL}/api/blogs/update/${id}`, {
         title: inputs.title,
-        description: inputs.description,
+        desc: inputs.description,
       });
       return res.data;
     } catch (err) {
@@ -57,7 +64,7 @@ const BlogDetail = () => {
     sendRequest()
       .then((data) => {
         console.log("Blog updated:", data);
-        navigate("/myBlogs/");
+        navigate("/myBlogs", { replace: true, state: { refresh: Date.now() } });
       });
   };
 
@@ -66,51 +73,66 @@ const BlogDetail = () => {
       {blog ? (
         <form onSubmit={handleSubmit}>
           <Box
-            border={3}
-            borderColor="linear-gradient(90deg, rgba(58,75,180,1) 2%, rgba(116,49,110,1) 36%, rgba(2,0,161,1) 73%, rgba(69,92,252,1) 100%)"
-            borderRadius={10}
-            boxShadow="10px 10px 20px #ccc"
+            className="form-card"
             padding={3}
             margin={"auto"}
             marginTop={3}
             display="flex"
             flexDirection={"column"}
-            width={"80%"}
+            width={"100%"}
+            sx={{ maxWidth: 760 }}
           >
-            <Typography
-              fontWeight={"bold"}
-              padding={3}
-              color="grey"
-              variant="h2"
-              textAlign={"center"}
-            >
-              Update Blog
-            </Typography>
+          <Typography
+            fontWeight={"bold"}
+            padding={3}
+            variant="h3"
+            textAlign={"center"}
+            className="page-title"
+          >
+            Update Blog
+          </Typography>
             <InputLabel sx={labelStyles}>Title</InputLabel>
             <TextField
               name="title"
               onChange={handleChange}
               value={inputs.title}
-              margin="auto"
+              margin="normal"
               variant="outlined"
               required
+              sx={{
+                mx: "auto",
+                width: "100%",
+                input: { color: "var(--text)" },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "var(--border)",
+                },
+              }}
             />
             <InputLabel sx={labelStyles}>Description</InputLabel>
             <TextField
               name="description"
               onChange={handleChange}
               value={inputs.description}
-              margin="auto"
+              margin="normal"
               variant="outlined"
               multiline
               rows={4}
               required
+              sx={{
+                mx: "auto",
+                width: "100%",
+                textarea: { color: "var(--text)" },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "var(--border)",
+                },
+              }}
             />
             <Button
-              sx={{ mt: 2, borderRadius: 4 }}
+              sx={{ mt: 2 }}
               variant="contained"
               color="warning"
               type="submit"
+              className="pill-button"
             >
               Submit
             </Button>

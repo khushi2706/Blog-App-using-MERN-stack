@@ -6,9 +6,9 @@ const { ApiError } = require("../utils/ApiError");
 
 const getAllBlogs = async (req, res, next) => {
   try {
-    const blogs = await Blog.find();
+    const blogs = await Blog.find().populate("user");
     if (!blogs || blogs.length === 0) {
-      return res.status(404).json(new ApiError(404, "No blogs found"));
+      return res.status(200).json(new ApiResponse(200, { blogs: [] }, "No blogs found"));
     }
     return res.status(200).json(new ApiResponse(200, { blogs }, "Blogs found"));
   } catch (e) {
@@ -28,12 +28,10 @@ const addBlog = async (req, res, next) => {
 
     const blog = new Blog({ title, desc, img, user, date: currentDate });
 
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    await blog.save({ session });
+    await blog.save();
+    await blog.populate("user");
     existingUser.blogs.push(blog);
-    await existingUser.save({ session });
-    await session.commitTransaction();
+    await existingUser.save();
 
     return res.status(201).json(new ApiResponse(201, { blog }, "Blog created successfully"));
   } catch (e) {
@@ -59,7 +57,7 @@ const updateBlog = async (req, res, next) => {
 const getById = async (req, res, next) => {
   const id = req.params.id;
   try {
-    const blog = await Blog.findById(id);
+    const blog = await Blog.findById(id).populate("user");
     if (!blog) {
       return res.status(404).json(new ApiError(404, "Blog not found"));
     }
