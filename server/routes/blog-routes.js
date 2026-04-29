@@ -4,10 +4,10 @@ const { getAllBlogs , addBlog ,
      updateBlog ,getById , 
     deleteBlog , getByUserId} = require("../controller/blog-controller");
 
-blogRouter.get("/",getAllBlogs);
-blogRouter.post('/add', addBlog);
-blogRouter.put("/update/:id",  updateBlog);
+blogRouter.get("/", getAllBlogs);
+blogRouter.post("/add", addBlog);
+blogRouter.get("/user/:id", getByUserId);
 blogRouter.get("/:id", getById);
-blogRouter.delete("/:id",deleteBlog);
-blogRouter.get("/user/:id",getByUserId)
+blogRouter.put("/update/:id", updateBlog);
+blogRouter.delete("/:id", deleteBlog);
 module.exports = blogRouter;

@@ -34,7 +34,11 @@ const signUp = async (req, res, next) => {
         });
 
         await user.save();
-        return res.status(201).json(new ApiResponse(201, { user }, "User registered successfully"));
+        const safeUser = user.toObject();
+        delete safeUser.password;
+        return res
+            .status(201)
+            .json(new ApiResponse(201, { user: safeUser }, "User registered successfully"));
     } catch (e) {
         console.error(e);
         return res.status(500).json(new ApiError(500, "Server error while signing up"));
@@ -55,7 +59,11 @@ const logIn = async (req, res, next) => {
             return res.status(400).json(new ApiError(400, "Incorrect Password"));
         }
 
-        return res.status(200).json(new ApiResponse(200, { user: existingUser }, "Login successful"));
+        const safeUser = existingUser.toObject();
+        delete safeUser.password;
+        return res
+            .status(200)
+            .json(new ApiResponse(200, { user: safeUser }, "Login successful"));
     } catch (err) {
         console.error(err);
         return res.status(500).json(new ApiError(500, "Server error while logging in"));
