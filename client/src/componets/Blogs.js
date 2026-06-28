@@ -6,14 +6,20 @@ import config from "../config";
 const Blogs = () => {
   const [blogs, setBlogs] = useState();
   const sendRequest = async () => {
-    const res = await axios
-      .get(`${config.BASE_URL}/api/blogs`)
-      .catch((err) => console.log(err));
-    const data = await res.data;
+    let res;
+    try {
+      res = await axios.get(`${config.BASE_URL}/api/blogs`);
+    } catch (err) {
+      console.log(err);
+      throw err; // Re-throw the error to be caught by the .then().catch() chain
+    }
+    const data = res.data;
     return data;
   };
   useEffect(() => {
-    sendRequest().then((data) => setBlogs(data.blogs));
+    sendRequest()
+      .then((data) => setBlogs(data.blogs))
+      .catch((err) => console.log("Fetch blogs error:", err)); // Add catch block
   }, []);
   console.log(blogs);
   return (

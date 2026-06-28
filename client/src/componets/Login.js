@@ -30,15 +30,19 @@ const Login = () => {
   const sendRequest = async (type = "login") => {
     console.log("inside send req");
     console.log(`${config.BASE_URL}/api/users/${type}`);
-    const res = await axios
-      .post(`${config.BASE_URL}/api/users/${type}`, {
+    let res;
+    try {
+      res = await axios.post(`${config.BASE_URL}/api/users/${type}`, {
         name: inputs.name,
         email: inputs.email,
         password: inputs.password,
-      })
-      .catch((err) => console.log(err));
+      });
+    } catch (err) {
+      console.log(err);
+      throw err; // Re-throw the error to be caught by the .then().catch() chain
+    }
 
-    const data = await res.data;
+    const data = res.data;
     console.log("return");
     console.log(data);
     return data;
@@ -46,17 +50,18 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(inputs);
     if (isSignup) {
       sendRequest("signup")
-        .then((data) => localStorage.setItem("userId", data.user._id))
+        .then((data) => localStorage.setItem("userId", data.data.user._id))
         .then(() => dispath(authActions.login()))
-        .then(() => naviagte("/blogs"));
+        .then(() => naviagte("/blogs"))
+        .catch((err) => console.log("Signup error:", err)); // Add catch block
     } else {
       sendRequest()
-        .then((data) => localStorage.setItem("userId", data.user._id))
+        .then((data) => localStorage.setItem("userId", data.data.user._id))
         .then(() => dispath(authActions.login()))
-        .then(() => naviagte("/blogs"));
+        .then(() => naviagte("/blogs"))
+        .catch((err) => console.log("Login error:", err)); // Add catch block
     }
   };
   return (
