@@ -11,6 +11,7 @@ also visit [E-commerce_website-using-React-Redux](https://github.com/khushi2706/
 - **Delete Blog:** Remove unwanted blogs with a simple delete option.
 - **Update Blog:** Edit and update your blogs as your content evolves.
 - **View Other User Blogs:** Explore and read blogs published by other users.
+i changed the button colors
 
 ## Screenshots
 
